@@ -1,28 +1,35 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
 }
 
 h1 {
-    text-align: center;
+    color: #333;
+    font-size: 2em;
 }
 
 #market-data {
     margin-top: 20px;
 }
 
-.table {
+table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
-.table th,
-.table td {
-    border: 1px solid #ccc;
+th, td {
     padding: 8px;
-    text-align: left;
+    text-align: center;
+    border: 1px solid #ccc;
 }
 
-.table th {
-    background-color: #f5f5f5;
+th {
+    background-color: #f2f2f2;
+}
+
+#chart-container {
+    margin-top: 30px;
 }
