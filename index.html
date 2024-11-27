@@ -1,24 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>每日市场分析</title>
-    <link rel="stylesheet" href="assets/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <title>Today's Market Data</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>每日市场描述模型</h1>
-    <div id="market-data">
-        <!-- 市场数据将通过JavaScript动态加载 -->
+
+    <h1>Today's Market Data</h1>
+
+    <!-- 显示市场数据的容器 -->
+    <div class="market-data">
+        <table id="market-data-table">
+            <thead>
+                <tr>
+                    <th>Index</th>
+                    <th>Value</th>
+                    <th>Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 市场数据会在这里动态填充 -->
+            </tbody>
+        </table>
     </div>
 
-    <!-- 指数图表容器 -->
-    <div id="index-charts">
-        <h2>主要指数走势</h2>
-        <div id="chart-container" style="width: 100%; height: 400px;"></div>
+    <!-- 图表容器 -->
+    <div class="chart-container">
+        <canvas id="marketChart"></canvas>
     </div>
 
-    <script src="assets/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
