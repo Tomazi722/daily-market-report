@@ -1,35 +1,54 @@
+/* style.css */
+
+/* 重置一些默认的样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 20px;
 }
 
+/* 页面标题样式 */
 h1 {
-    color: #333;
-    font-size: 2em;
+  text-align: center;
+  color: #007bff;
 }
 
-#market-data {
-    margin-top: 20px;
-}
-
+/* 样式化表格 */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
 }
 
 th, td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ccc;
+  padding: 12px;
+  text-align: center;
 }
 
 th {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
-#chart-container {
-    margin-top: 30px;
+/* 图表容器样式 */
+.chart-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 每日市场数据的容器 */
+.market-data {
+  margin: 20px 0;
+  text-align: center;
 }
