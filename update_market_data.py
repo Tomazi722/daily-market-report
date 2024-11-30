@@ -13,7 +13,7 @@ def get_index_history():
     index_data = {}
     for name, symbol in index_symbols.items():
         print(f"Fetching data for {name} index...")
-        df = ak.index_zh_a_hist(symbol=symbol, period="daily", adjust="qfq")
+        df = ak.index_zh_a_hist(symbol=symbol, period="daily")  # 移除 adjust="qfq"
         
         # 确保 'date' 列是 datetime 类型
         df['date'] = pd.to_datetime(df['date'], errors='coerce')
