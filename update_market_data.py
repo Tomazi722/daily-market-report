@@ -16,13 +16,12 @@ def get_index_history():
         df = ak.index_zh_a_hist(symbol=symbol, period="daily")  # 移除 adjust="qfq"
         
         # 确保 'date' 列是 datetime 类型
-        df['date'] = pd.to_datetime(df['date'], errors='coerce')
+        if 'date' in df.columns:
+            df['date'] = pd.to_datetime(df['date'], errors='coerce')
+            df['date'] = df['date'].dt.strftime('%Y-%m-%d')
         
-        # 格式化 'date' 列
-        df['date'] = df['date'].dt.strftime('%Y-%m-%d')
-        
-        # 提取所需的字段
-        index_data[name] = df[['date', 'close', 'pct_chg']]
+        # 将 DataFrame 转换为字典
+        index_data[name] = df[['日期', '收盘', '涨跌幅']].to_dict(orient='records')
 
     return index_data
 
