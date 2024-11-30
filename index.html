@@ -3,35 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今天市场数据</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Market Data Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>股市数据</h1>
+        </header>
 
-    <h1>今天市场数据</h1>
+        <section id="index-data">
+            <h2>三大指数实时数据</h2>
+            <div id="index-cards">
+                <!-- 卡片展示每个指数数据 -->
+            </div>
+        </section>
 
-    <!-- 显示市场数据的容器 -->
-    <div class="market-data">
-        <table id="market-data-table">
-            <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>Value</th>
-                    <th>Change</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- 市场数据会在这里动态填充 -->
-            </tbody>
-        </table>
+        <section id="index-history">
+            <h2>指数历史数据</h2>
+            <table id="index-table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>指数名称</th>
+                        <th>收盘价</th>
+                        <th>涨跌幅</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 动态插入数据 -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="index-chart">
+            <h2>指数走势图</h2>
+            <canvas id="index-chart-canvas"></canvas>
+        </section>
     </div>
 
-    <!-- 图表容器 -->
-    <div class="chart-container">
-        <canvas id="marketChart"></canvas>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
