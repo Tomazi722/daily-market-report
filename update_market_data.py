@@ -26,9 +26,9 @@ def get_index_history():
     return index_data
 
 def save_market_data_to_json(market_data):
-    print("Saving market data to JSON...")
     with open('market_data.json', 'w', encoding='utf-8') as f:
         json.dump(market_data, f, ensure_ascii=False, indent=4)
+    print("Market data updated successfully!")
 
 def main():
     print("Starting market data update...")
