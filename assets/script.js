@@ -1,52 +1,45 @@
-// 模拟获取数据
-const marketData = {
-    "sh": [
-        { "date": "2024-11-01", "close": 3200.0, "pct_chg": 0.5 },
-        { "date": "2024-11-02", "close": 3220.0, "pct_chg": 0.625 },
-        { "date": "2024-11-03", "close": 3180.0, "pct_chg": -1.24 },
-        { "date": "2024-11-04", "close": 3190.0, "pct_chg": 0.31 }
-    ],
-    "sz": [
-        { "date": "2024-11-01", "close": 13000.0, "pct_chg": 1.0 },
-        { "date": "2024-11-02", "close": 13100.0, "pct_chg": 0.5 },
-        { "date": "2024-11-03", "close": 12950.0, "pct_chg": -0.5 },
-        { "date": "2024-11-04", "close": 13050.0, "pct_chg": 0.77 }
-    ],
-    "cyb": [
-        { "date": "2024-11-01", "close": 4000.0, "pct_chg": 1.2 },
-        { "date": "2024-11-02", "close": 4050.0, "pct_chg": 1.25 },
-        { "date": "2024-11-03", "close": 3950.0, "pct_chg": -2.5 },
-        { "date": "2024-11-04", "close": 4005.0, "pct_chg": 1.4 }
-    ]
-};
+// 获取并显示市场数据
+async function fetchMarketData() {
+    try {
+        const response = await fetch('market_data.json');  // 加载 JSON 数据
+        const marketData = await response.json();  // 解析 JSON 数据
+
+        // 填充数据
+        populateData(marketData);
+        plotChart(marketData);
+
+    } catch (error) {
+        console.error("Error fetching market data:", error);
+    }
+}
 
 // 将数据填充到页面
-function populateData() {
+function populateData(marketData) {
     const indexCards = document.getElementById("index-cards");
     const indexTableBody = document.getElementById("index-table").getElementsByTagName('tbody')[0];
-    
+
     // 清空之前的内容
     indexCards.innerHTML = '';
     indexTableBody.innerHTML = '';
 
     // 填充卡片展示
-    for (let index in marketData) {
-        let latestData = marketData[index][marketData[index].length - 1];
+    for (let name in marketData) {
+        let latestData = marketData[name][marketData[name].length - 1];
         let card = document.createElement("div");
         card.classList.add("card");
         card.innerHTML = `
-            <h3>${index === 'sh' ? '上证指数' : index === 'sz' ? '深证成指' : '创业板'}</h3>
+            <h3>${name === 'sh' ? '上证指数' : name === 'sz' ? '深证成指' : '创业板'}</h3>
             <p>收盘价：${latestData.close}</p>
             <p>涨跌幅：${latestData.pct_chg}%</p>
         `;
         indexCards.appendChild(card);
 
         // 填充表格
-        marketData[index].forEach(row => {
+        marketData[name].forEach(row => {
             let tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${row.date}</td>
-                <td>${index === 'sh' ? '上证指数' : index === 'sz' ? '深证成指' : '创业板'}</td>
+                <td>${name === 'sh' ? '上证指数' : name === 'sz' ? '深证成指' : '创业板'}</td>
                 <td>${row.close}</td>
                 <td>${row.pct_chg}%</td>
             `;
@@ -56,9 +49,9 @@ function populateData() {
 }
 
 // 绘制指数走势图
-function plotChart() {
+function plotChart(marketData) {
     const ctx = document.getElementById('index-chart-canvas').getContext('2d');
-    
+
     const labels = marketData.sh.map(data => data.date);
     const data = {
         labels: labels,
@@ -108,7 +101,7 @@ function plotChart() {
         });
 }
 
+// 页面加载时自动获取数据
 document.addEventListener("DOMContentLoaded", () => {
-    populateData();
-    plotChart();
+    fetchMarketData();
 });
