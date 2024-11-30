@@ -1,45 +1,41 @@
+import json
 import akshare as ak
 import pandas as pd
-import json
-from datetime import datetime, timedelta
 
 def get_index_history():
-    # 获取上证指数、深证成指、创业板指的近30个交易日的收盘价
-    indices = {
-        'sh000001': '上证指数',
-        'sz399001': '深证成指',
-        'sz399006': '创业板指'
+    # 获取上证、深证、创业板指数的历史数据
+    index_symbols = {
+        'sh': '000001',  # 上证指数
+        'sz': '399001',  # 深证成指
+        'cyb': '399006'  # 创业板
     }
-    end_date = datetime.now().strftime('%Y%m%d')
-    start_date = (datetime.now() - timedelta(days=60)).strftime('%Y%m%d')  # 获取近60天的数据，考虑到非交易日
-    index_history = {}
-    for code, name in indices.items():
-        df = ak.stock_zh_index_daily(symbol=code)
-        df = df.reset_index()
+    
+    index_data = {}
+    for name, symbol in index_symbols.items():
+        print(f"Fetching data for {name} index...")
+        df = ak.index_zh_a_hist(symbol=symbol, period="daily", adjust="qfq")
+        
+        # 确保 'date' 列是 datetime 类型
+        df['date'] = pd.to_datetime(df['date'], errors='coerce')
+        
+        # 格式化 'date' 列
         df['date'] = df['date'].dt.strftime('%Y-%m-%d')
-        df = df[(df['date'] >= start_date) & (df['date'] <= end_date)]
-        df = df.tail(30)  # 获取最近30个交易日的数据
-        index_history[name] = {
-            'dates': df['date'].tolist(),
-            'close': df['close'].tolist()
-        }
-    return index_history
+        
+        # 提取所需的字段
+        index_data[name] = df[['date', 'close', 'pct_chg']]
+
+    return index_data
+
+def save_market_data_to_json(market_data):
+    print("Saving market data to JSON...")
+    with open('market_data.json', 'w', encoding='utf-8') as f:
+        json.dump(market_data, f, ensure_ascii=False, indent=4)
 
 def main():
-    data = []
-    
-    # 获取并添加指数历史数据
-    index_history = get_index_history()
-    index_history_section = {
-        'title': '指数历史数据',
-        'type': 'index_history',
-        'content': index_history
-    }
-    data.append(index_history_section)
-
-    # 保存数据到JSON文件
-    with open('data/market_data.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    print("Starting market data update...")
+    market_data = get_index_history()
+    save_market_data_to_json(market_data)
+    print("Market data updated successfully!")
 
 if __name__ == "__main__":
     main()
