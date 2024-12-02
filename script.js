@@ -53,10 +53,10 @@ document.addEventListener("DOMContentLoaded", function() {
         const szClosing = szData.map(item => item.收盘);
         const cybClosing = cybData.map(item => item.收盘);
 
-        // 计算每日涨幅
-        const shDailyChange = calculateDailyChange(shData);
-        const szDailyChange = calculateDailyChange(szData);
-        const cybDailyChange = calculateDailyChange(cybData);
+        // 使用提供的涨跌幅数据
+        const shDailyChange = shData.map(item => item.涨跌幅);
+        const szDailyChange = szData.map(item => item.涨跌幅);
+        const cybDailyChange = cybData.map(item => item.涨跌幅);
 
         const chartData = {
             labels: labels,
@@ -116,14 +116,6 @@ document.addEventListener("DOMContentLoaded", function() {
             type: 'line',
             data: chartData,
             options: chartOptions
-        });
-    }
-
-    // 计算每日涨幅
-    function calculateDailyChange(indexData) {
-        return indexData.map((item, index) => {
-            if (index === 0) return 0; // 第一天无涨幅
-            return ((item.收盘 - indexData[index - 1].收盘) / indexData[index - 1].收盘) * 100;
         });
     }
 });
