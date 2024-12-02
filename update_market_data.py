@@ -17,6 +17,7 @@ def get_index_history():
     # 上证指数
     try:
         sh_df = ak.index_zh_a_hist(symbol="sh000001", period="daily", start_date=start_date, end_date=end_date)
+        print(sh_df)
         if sh_df is None or sh_df.empty:
             print(f"Error: No data returned for 上证指数 (sh000001) from {start_date} to {end_date}")
             sh_df = pd.DataFrame()  # 空数据框
