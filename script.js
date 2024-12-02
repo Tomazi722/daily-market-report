@@ -45,25 +45,18 @@ document.addEventListener("DOMContentLoaded", function() {
         const szData = data.sz;
         const cybData = data.cyb;
 
-        const labels = shData.map(item => item.date);
+        // 标签是日期
+        const labels = shData.map(item => item.日期);
+
+        // 收盘价数据
         const shClosing = shData.map(item => item.收盘);
         const szClosing = szData.map(item => item.收盘);
         const cybClosing = cybData.map(item => item.收盘);
 
-        const shDailyChange = shData.map((item, index) => {
-            if (index === 0) return 0;
-            return ((item.收盘 - shData[index - 1].收盘) / shData[index - 1].收盘) * 100;
-        });
-
-        const szDailyChange = szData.map((item, index) => {
-            if (index === 0) return 0;
-            return ((item.收盘 - szData[index - 1].收盘) / szData[index - 1].收盘) * 100;
-        });
-
-        const cybDailyChange = cybData.map((item, index) => {
-            if (index === 0) return 0;
-            return ((item.收盘 - cybData[index - 1].收盘) / cybData[index - 1].收盘) * 100;
-        });
+        // 计算每日涨幅
+        const shDailyChange = calculateDailyChange(shData);
+        const szDailyChange = calculateDailyChange(szData);
+        const cybDailyChange = calculateDailyChange(cybData);
 
         const chartData = {
             labels: labels,
@@ -113,6 +106,14 @@ document.addEventListener("DOMContentLoaded", function() {
             type: 'line',
             data: chartData,
             options: chartOptions
+        });
+    }
+
+    // 计算每日涨幅
+    function calculateDailyChange(indexData) {
+        return indexData.map((item, index) => {
+            if (index === 0) return 0; // 第一天无涨幅
+            return ((item.收盘 - indexData[index - 1].收盘) / indexData[index - 1].收盘) * 100;
         });
     }
 });
