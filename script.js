@@ -1,107 +1,107 @@
-// 获取并显示市场数据
-async function fetchMarketData() {
-    try {
-        const response = await fetch('market_data.json');  // 加载 JSON 数据
-        const marketData = await response.json();  // 解析 JSON 数据
+// 获取数据并展示
+fetch('market_data.json')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);  // 打印数据检查
 
-        // 填充数据
-        populateData(marketData);
-        plotChart(marketData);
-
-    } catch (error) {
-        console.error("Error fetching market data:", error);
-    }
-}
-
-// 将数据填充到页面
-function populateData(marketData) {
-    const indexCards = document.getElementById("index-cards");
-    const indexTableBody = document.getElementById("index-table").getElementsByTagName('tbody')[0];
-
-    // 清空之前的内容
-    indexCards.innerHTML = '';
-    indexTableBody.innerHTML = '';
-
-    // 填充卡片展示
-    for (let name in marketData) {
-        let latestData = marketData[name][marketData[name].length - 1];
-        let card = document.createElement("div");
-        card.classList.add("card");
-        card.innerHTML = `
-            <h3>${name === 'sh' ? '上证指数' : name === 'sz' ? '深证成指' : '创业板'}</h3>
-            <p>收盘价：${latestData.close}</p>
-            <p>涨跌幅：${latestData.pct_chg}%</p>
+        // 更新三大指数卡片部分
+        const indexCards = document.getElementById('index-cards');
+        indexCards.innerHTML = `
+            <div class="index-card">
+                <h2>上证指数</h2>
+                <p>最新收盘：${data.sh[0].收盘}</p>
+                <p>涨跌幅：${data.sh[0].涨跌幅}%</p>
+            </div>
+            <div class="index-card">
+                <h2>深证成指</h2>
+                <p>最新收盘：${data.sz[0].收盘}</p>
+                <p>涨跌幅：${data.sz[0].涨跌幅}%</p>
+            </div>
+            <div class="index-card">
+                <h2>创业板指数</h2>
+                <p>最新收盘：${data.cyb[0].收盘}</p>
+                <p>涨跌幅：${data.cyb[0].涨跌幅}%</p>
+            </div>
         `;
-        indexCards.appendChild(card);
 
-        // 填充表格
-        marketData[name].forEach(row => {
-            let tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${row.date}</td>
-                <td>${name === 'sh' ? '上证指数' : name === 'sz' ? '深证成指' : '创业板'}</td>
-                <td>${row.close}</td>
-                <td>${row.pct_chg}%</td>
-            `;
-            indexTableBody.appendChild(tr);
-        });
-    }
-}
+        // 填充指数数据到表格
+        const tableBody = document.getElementById('index-table').getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = `
+            ${data.sh.map(item => `
+                <tr>
+                    <td>${item.日期}</td>
+                    <td>上证指数</td>
+                    <td>${item.收盘}</td>
+                    <td>${item.涨跌幅}%</td>
+                </tr>
+            `).join('')}
+            ${data.sz.map(item => `
+                <tr>
+                    <td>${item.日期}</td>
+                    <td>深证成指</td>
+                    <td>${item.收盘}</td>
+                    <td>${item.涨跌幅}%</td>
+                </tr>
+            `).join('')}
+            ${data.cyb.map(item => `
+                <tr>
+                    <td>${item.日期}</td>
+                    <td>创业板指数</td>
+                    <td>${item.收盘}</td>
+                    <td>${item.涨跌幅}%</td>
+                </tr>
+            `).join('')}
+        `;
 
-// 绘制指数走势图
-function plotChart(marketData) {
-    const ctx = document.getElementById('index-chart-canvas').getContext('2d');
-
-    const labels = marketData.sh.map(data => data.date);
-    const data = {
-        labels: labels,
-        datasets: [
-            {
-                label: '上证指数',
-                data: marketData.sh.map(data => data.close),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: '深证成指',
-                data: marketData.sz.map(data => data.close),
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1,
-                fill: false
-            },
-            {
-                label: '创业板',
-                data: marketData.cyb.map(data => data.close),
-                borderColor: 'rgba(255, 159, 64, 1)',
-                borderWidth: 1,
-                fill: false
-            }
-        ]
-    };
-
-    new Chart(ctx, {
-        type: 'line',
-        data: data,
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: '三大指数走势图'
+        // 生成图表数据
+        const ctx = document.getElementById('index-chart-canvas').getContext('2d');
+        const chartData = {
+            labels: data.sh.map(item => item.日期),
+            datasets: [
+                {
+                    label: '上证指数',
+                    data: data.sh.map(item => item.收盘),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.raw;
-                        }
+                {
+                    label: '深证成指',
+                    data: data.sz.map(item => item.收盘),
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: '创业板指数',
+                    data: data.cyb.map(item => item.收盘),
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }
+            ]
+        };
+
+        const chartOptions = {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'category',
+                    labels: data.sh.map(item => item.日期)
+                },
+                y: {
+                    ticks: {
+                        beginAtZero: false
                     }
                 }
             }
-        });
-}
+        };
 
-// 页面加载时自动获取数据
-document.addEventListener("DOMContentLoaded", () => {
-    fetchMarketData();
-});
+        // 创建图表
+        new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: chartOptions
+        });
+    })
+    .catch(error => console.error('Error loading market data:', error));
