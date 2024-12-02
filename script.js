@@ -98,6 +98,16 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                     }
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,  // 不强制从零开始
+                    ticks: {
+                        // 自适应范围：最小值是数据中的最小值，最大值是数据中的最大值，外加一定的缓冲区
+                        min: Math.min(...shDailyChange.concat(szDailyChange, cybDailyChange)) * 1.1,
+                        max: Math.max(...shDailyChange.concat(szDailyChange, cybDailyChange)) * 1.1
+                    }
+                }
             }
         };
 
