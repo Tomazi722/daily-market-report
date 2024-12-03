@@ -1,50 +1,144 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>股市实时资金流向</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Stock Market Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img src="https://www.example.com/logo.png" alt="Logo" class="logo-img">
+    <div class="container">
+        <!-- 三大指数的折线图 -->
+        <div class="chart-container">
+            <h2>三大指数近5日走势</h2>
+            <canvas id="szChart"></canvas>
+            <canvas id="szciChart"></canvas>
+            <canvas id="cybChart"></canvas>
         </div>
-        <div class="menu">
-            <a href="#">首页</a>
-            <a href="#">概念资金流</a>
-            <a href="#">行业资金流</a>
+
+        <!-- 概念资金流 -->
+        <div class="fund-flow-container">
+            <h3>概念资金流</h3>
+            <table id="concept-fund-flow">
+                <thead>
+                    <tr>
+                        <th>行业</th>
+                        <th>流入资金 (亿)</th>
+                        <th>流出资金 (亿)</th>
+                        <th>净流入/流出 (亿)</th>
+                    </tr>
+                </thead>
+                <tbody id="concept-tbody">
+                    <!-- 动态加载数据 -->
+                </tbody>
+            </table>
         </div>
-    </nav>
 
-    <header class="header">
-        <div class="header-content">
-            <h1>股市资金流向</h1>
-            <p>查看三大指数走势及概念与行业资金流向，实时掌握市场动态。</p>
+        <!-- 行业资金流 -->
+        <div class="fund-flow-container">
+            <h3>行业资金流</h3>
+            <table id="industry-fund-flow">
+                <thead>
+                    <tr>
+                        <th>行业</th>
+                        <th>流入资金 (亿)</th>
+                        <th>流出资金 (亿)</th>
+                        <th>净流入/流出 (亿)</th>
+                    </tr>
+                </thead>
+                <tbody id="industry-tbody">
+                    <!-- 动态加载数据 -->
+                </tbody>
+            </table>
         </div>
-    </header>
+    </div>
 
-    <section id="indices" class="indices-section">
-        <h2>三大指数走势</h2>
-        <canvas id="indicesChart" width="400" height="200"></canvas>
-    </section>
+    <script>
+        // 从后端获取数据
+        fetch('market_data.json')
+            .then(response => response.json())
+            .then(data => {
+                const indicesData = data.indices;
+                const conceptData = data.concept_fund_flow;
+                const industryData = data.industry_fund_flow;
 
-    <section id="concept-fund-flow" class="fund-flow-section">
-        <h2>概念资金流向</h2>
-        <div id="concept-cards" class="fund-flow-cards">
-            <!-- 动态填充概念资金流的数据 -->
-        </div>
-    </section>
+                // 绘制三大指数的折线图
+                const szData = indicesData.map(item => item['上证指数']);
+                const szciData = indicesData.map(item => item['深证成指']);
+                const cybData = indicesData.map(item => item['创业板指']);
+                const labels = indicesData.map(item => item['date']);
 
-    <section id="industry-fund-flow" class="fund-flow-section">
-        <h2>行业资金流向</h2>
-        <div id="industry-cards" class="fund-flow-cards">
-            <!-- 动态填充行业资金流的数据 -->
-        </div>
-    </section>
+                const ctx1 = document.getElementById('szChart').getContext('2d');
+                const ctx2 = document.getElementById('szciChart').getContext('2d');
+                const ctx3 = document.getElementById('cybChart').getContext('2d');
 
-    <script src="script.js"></script>
+                new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '上证指数',
+                            data: szData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false
+                        }]
+                    }
+                });
+
+                new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '深证成指',
+                            data: szciData,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            fill: false
+                        }]
+                    }
+                });
+
+                new Chart(ctx3, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '创业板指',
+                            data: cybData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        }]
+                    }
+                });
+
+                // 动态加载概念资金流数据
+                const conceptTableBody = document.getElementById('concept-tbody');
+                conceptData.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.行业}</td>
+                        <td>${item.流入资金}</td>
+                        <td>${item.流出资金}</td>
+                        <td>${item['净流入/流出']}</td>
+                    `;
+                    conceptTableBody.appendChild(row);
+                });
+
+                // 动态加载行业资金流数据
+                const industryTableBody = document.getElementById('industry-tbody');
+                industryData.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.行业}</td>
+                        <td>${item.流入资金}</td>
+                        <td>${item.流出资金}</td>
+                        <td>${item['净流入/流出']}</td>
+                    `;
+                    industryTableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error loading market data:', error));
+    </script>
 </body>
 </html>
