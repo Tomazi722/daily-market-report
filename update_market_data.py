@@ -22,6 +22,7 @@ def get_indices_data():
 
         # 选择最近一日的收盘数据
         indices_data['date'] = pd.to_datetime(indices_data['date'])
+        indices_data['date'] = indices_data['date'].dt.strftime('%Y-%m-%d')  # 转换为字符串格式
         indices_data = indices_data[indices_data['date'] == indices_data['date'].max()]
 
         return indices_data
@@ -71,6 +72,7 @@ def main():
             "industry_fund_flow": industry_fund_flow_df.to_dict(orient="records"),
         }
 
+        # 保存为 JSON 文件
         with open('market_data.json', 'w', encoding='utf-8') as f:
             json.dump(market_data, f, ensure_ascii=False, indent=4)
         print("Market data updated successfully!")
