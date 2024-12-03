@@ -3,27 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>股市实时数据展示</title>
+    <title>股市实时资金流向</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- 页面顶部标题和介绍 -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://www.example.com/logo.png" alt="Logo" class="logo-img">
+        </div>
+        <div class="menu">
+            <a href="#">首页</a>
+            <a href="#">概念资金流</a>
+            <a href="#">行业资金流</a>
+        </div>
+    </nav>
+
     <header class="header">
         <div class="header-content">
-            <h1>股市实时数据</h1>
-            <p>最新的上证、深证与创业板指数数据，助您把握市场动向。</p>
+            <h1>股市资金流向</h1>
+            <p>查看概念股与行业资金流向，实时掌握市场动态。</p>
         </div>
     </header>
 
-    <!-- 三大指数的卡片展示 -->
-    <section id="index-cards" class="index-cards">
-        <!-- 动态填充指数数据的卡片 -->
+    <section id="concept-fund-flow" class="fund-flow-section">
+        <h2>概念资金流向</h2>
+        <div id="concept-cards" class="fund-flow-cards">
+            <!-- 动态填充概念资金流的数据 -->
+        </div>
     </section>
 
-    <!-- 图表展示区域 -->
-    <section id="index-chart-section">
-        <canvas id="index-chart-canvas"></canvas>
+    <section id="industry-fund-flow" class="fund-flow-section">
+        <h2>行业资金流向</h2>
+        <div id="industry-cards" class="fund-flow-cards">
+            <!-- 动态填充行业资金流的数据 -->
+        </div>
     </section>
 
     <script src="script.js"></script>
