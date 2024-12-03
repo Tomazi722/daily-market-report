@@ -3,10 +3,10 @@ import json
 import pandas as pd
 import datetime
 
-# 获取三大指数的数据
+# 获取三大指数的近5日数据
 def get_indices_data():
     try:
-        # 获取上证指数、深证成指、创业板指的日线数据
+        # 获取上证指数、深证成指、创业板指的近5日数据
         sz_index = ak.stock_zh_index_daily(symbol="sh000001")  # 上证指数
         sz_index = sz_index[['date', 'close']].rename(columns={'close': '上证指数'})
         
@@ -20,37 +20,49 @@ def get_indices_data():
         indices_data = pd.merge(sz_index, szci_index, on='date')
         indices_data = pd.merge(indices_data, cyb_index, on='date')
 
-        # 选择最近一日的收盘数据
+        # 将日期转换为时间格式，并设置为最近5日数据
         indices_data['date'] = pd.to_datetime(indices_data['date'])
-        indices_data['date'] = indices_data['date'].dt.strftime('%Y-%m-%d')  # 转换为字符串格式
-        indices_data = indices_data[indices_data['date'] == indices_data['date'].max()]
+        indices_data = indices_data[indices_data['date'] >= (indices_data['date'].max() - pd.Timedelta(days=5))]
+
+        # 格式化日期为字符串
+        indices_data['date'] = indices_data['date'].dt.strftime('%Y-%m-%d')
 
         return indices_data
     except Exception as e:
         print(f"Error fetching indices data: {e}")
         return None
 
-# 获取概念资金流数据（流入和流出资金最多的前5个）
+# 获取概念资金流数据（流入和流出资金最多的前5个，并计算净流入/流出）
 def get_concept_fund_flow(symbol="即时"):
     try:
         df = ak.stock_fund_flow_concept(symbol=symbol)
-        # 选择所需的列并格式化数据
-        df = df[['行业', '流入资金', '流出资金']]
-        # 按流入资金和流出资金排序，获取最多的5个
-        df = df.nlargest(5, '流入资金')
+        # 计算净流入/流出
+        df['净流入/流出'] = df['流入资金'] - df['流出资金']
+        
+        # 选择所需的列
+        df = df[['行业', '流入资金', '流出资金', '净流入/流出']]
+        
+        # 按照净流入/流出的绝对值排序，获取前5个
+        df = df.reindex(df['净流入/流出'].abs().nlargest(5).index)
+        
         return df
     except Exception as e:
         print(f"Error fetching concept fund flow data: {e}")
         return None
 
-# 获取行业资金流数据（流入和流出资金最多的前5个）
+# 获取行业资金流数据（流入和流出资金最多的前5个，并计算净流入/流出）
 def get_industry_fund_flow(symbol="即时"):
     try:
         df = ak.stock_fund_flow_industry(symbol=symbol)
-        # 选择所需的列并格式化数据
-        df = df[['行业', '流入资金', '流出资金']]
-        # 按流入资金和流出资金排序，获取最多的5个
-        df = df.nlargest(5, '流入资金')
+        # 计算净流入/流出
+        df['净流入/流出'] = df['流入资金'] - df['流出资金']
+        
+        # 选择所需的列
+        df = df[['行业', '流入资金', '流出资金', '净流入/流出']]
+        
+        # 按照净流入/流出的绝对值排序，获取前5个
+        df = df.reindex(df['净流入/流出'].abs().nlargest(5).index)
+        
         return df
     except Exception as e:
         print(f"Error fetching industry fund flow data: {e}")
