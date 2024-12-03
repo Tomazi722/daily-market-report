@@ -1,60 +1,69 @@
-/* 通用样式 */
+/* Basic styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
 }
 
-.navbar {
-    background-color: #333;
-    padding: 10px;
-    color: white;
+header {
+    background-color: #282c34;
+    color: #fff;
+    padding: 20px 0;
     text-align: center;
 }
 
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px;
+}
+
+.navbar .logo img {
+    height: 50px;
+}
+
 .navbar .menu a {
-    color: white;
+    color: #fff;
     margin: 0 15px;
     text-decoration: none;
 }
 
-.header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 30px;
-    text-align: center;
+.indices-section {
+    padding: 20px;
 }
 
 .fund-flow-section {
-    margin: 30px 0;
-}
-
-.card {
-    background-color: white;
-    border-radius: 8px;
     padding: 20px;
-    margin: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.card h3 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-.card p {
-    font-size: 1em;
-    margin: 5px 0;
 }
 
 .fund-flow-cards {
     display: flex;
+    gap: 20px;
     flex-wrap: wrap;
-    justify-content: space-around;
 }
 
-.fund-flow-cards .card {
-    width: 30%;
-    margin: 10px;
+.card {
+    background-color: #f4f4f4;
+    padding: 15px;
+    width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.card p {
+    margin: 5px 0;
+    color: #555;
 }
