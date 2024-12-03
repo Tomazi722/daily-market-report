@@ -1,115 +1,59 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // 加载数据
-    fetch('market_data.json')
-        .then(response => response.json())
-        .then(data => {
-            // 更新三大指数折线图
-            updateIndicesChart(data.indices);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 三大指数的折线图 -->
+        <div class="chart-container">
+            <h2>三大指数近5日走势</h2>
+            <canvas id="szChart"></canvas>
+            <canvas id="szciChart"></canvas>
+            <canvas id="cybChart"></canvas>
+        </div>
 
-            // 更新概念资金流展示
-            updateConceptFundFlow(data.concept_fund_flow);
+        <!-- 概念资金流 -->
+        <div class="fund-flow-container">
+            <h3>概念资金流</h3>
+            <table id="concept-fund-flow">
+                <thead>
+                    <tr>
+                        <th>行业</th>
+                        <th>流入资金 (亿)</th>
+                        <th>流出资金 (亿)</th>
+                        <th>净流入/流出 (亿)</th>
+                    </tr>
+                </thead>
+                <tbody id="concept-tbody">
+                    <!-- 动态加载数据 -->
+                </tbody>
+            </table>
+        </div>
 
-            // 更新行业资金流展示
-            updateIndustryFundFlow(data.industry_fund_flow);
-        });
+        <!-- 行业资金流 -->
+        <div class="fund-flow-container">
+            <h3>行业资金流</h3>
+            <table id="industry-fund-flow">
+                <thead>
+                    <tr>
+                        <th>行业</th>
+                        <th>流入资金 (亿)</th>
+                        <th>流出资金 (亿)</th>
+                        <th>净流入/流出 (亿)</th>
+                    </tr>
+                </thead>
+                <tbody id="industry-tbody">
+                    <!-- 动态加载数据 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    // 更新三大指数折线图
-    function updateIndicesChart(indicesData) {
-        const ctx = document.getElementById('indicesChart').getContext('2d');
-        const labels = indicesData.map(item => item.date);
-        const data = {
-            labels: labels,
-            datasets: [
-                {
-                    label: '上证指数',
-                    data: indicesData.map(item => item['上证指数']),
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    fill: false
-                },
-                {
-                    label: '深证成指',
-                    data: indicesData.map(item => item['深证成指']),
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    fill: false
-                },
-                {
-                    label: '创业板指',
-                    data: indicesData.map(item => item['创业板指']),
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    fill: false
-                }
-            ]
-        };
-
-        const config = {
-            type: 'line',
-            data: data,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                    }
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: '日期'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: '指数值'
-                        }
-                    }
-                }
-            }
-        };
-
-        const indicesChart = new Chart(ctx, config);
-    }
-
-    // 更新概念资金流展示
-    function updateConceptFundFlow(conceptData) {
-        const conceptCards = document.getElementById("concept-cards");
-        conceptCards.innerHTML = "";  // 清空原有内容
-
-        conceptData.forEach(item => {
-            const card = document.createElement("div");
-            card.classList.add("card");
-
-            card.innerHTML = `
-                <h3>${item.行业}</h3>
-                <p>流入资金: ${item.流入资金} 亿</p>
-                <p>流出资金: ${item.流出资金} 亿</p>
-            `;
-            conceptCards.appendChild(card);
-        });
-    }
-
-    // 更新行业资金流展示
-    function updateIndustryFundFlow(industryData) {
-        const industryCards = document.getElementById("industry-cards");
-        industryCards.innerHTML = "";  // 清空原有内容
-
-        industryData.forEach(item => {
-            const card = document.createElement("div");
-            card.classList.add("card");
-
-            card.innerHTML = `
-                <h3>${item.行业}</h3>
-                <p>流入资金: ${item.流入资金} 亿</p>
-                <p>流出资金: ${item.流出资金} 亿</p>
-            `;
-            industryCards.appendChild(card);
-        });
-    }
-});
+    <script src="script.js"></script>
+</body>
+</html>
