@@ -1,81 +1,45 @@
-// Fetch the market data from the JSON file
-fetch('market_data.json')
-    .then(response => response.json())
-    .then(data => {
-        // Populate the 3 indices chart
-        const indices = data.indices.slice(0, 5); // Get last 5 days data
-        const indexLabels = indices.map(item => item.date);
-        const indexData = {
-            labels: indexLabels,
-            datasets: [
-                {
-                    label: '上证指数',
-                    data: indices.map(item => item.上证指数),
-                    borderColor: 'rgb(75, 192, 192)',
-                    fill: false
-                },
-                {
-                    label: '深证成指',
-                    data: indices.map(item => item.深证成指),
-                    borderColor: 'rgb(153, 102, 255)',
-                    fill: false
-                },
-                {
-                    label: '创业板指',
-                    data: indices.map(item => item.创业板指),
-                    borderColor: 'rgb(255, 159, 64)',
-                    fill: false
-                }
-            ]
-        };
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch market data from the JSON endpoint
+    fetch('/market_data')
+        .then(response => response.json())
+        .then(data => {
+            // Display the indices data
+            const indicesData = data.indices;
+            indicesData.forEach(index => {
+                const card = document.createElement('div');
+                card.className = "card";
+                card.innerHTML = `<h3>${index.date}</h3>
+                                <p>上证指数: ${index.上证指数}</p>
+                                <p>深证成指: ${index.深证成指}</p>
+                                <p>创业板指: ${index.创业板指}</p>`;
+                document.getElementById('indices-cards').appendChild(card);
+            });
 
-        const ctx = document.getElementById('indexChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: indexData,
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: '日期'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: '指数值'
-                        }
-                    }
-                }
-            }
+            // Display industry fund flow data
+            const industryData = data.industry_fund_flow;
+            industryData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "card";
+                card.innerHTML = `<h3>${item.名称}</h3>
+                                <p>净流入金额: ${item['今日主力净流入-净额']}</p>
+                                <p>最大流入股: ${item['今日主力净流入最大股']}</p>`;
+                document.getElementById('industry-fund-flow-cards').appendChild(card);
+            });
+
+            // Display concept fund flow data
+            const conceptData = data.concept_fund_flow;
+            conceptData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "card";
+                card.innerHTML = `<h3>${item.名称}</h3>
+                                <p>净流入金额: ${item['今日主力净流入-净额']}</p>
+                                <p>最大流入股: ${item['今日主力净流入最大股']}</p>`;
+                document.getElementById('concept-fund-flow-cards').appendChild(card);
+            });
+
+            // Optional: Add charts for visualizations (e.g., line charts, bar charts, etc.)
+        })
+        .catch(error => {
+            console.error('Error fetching market data:', error);
         });
-
-        // Populate the Concept Fund Flow table
-        const conceptFlow = data.concept_fund_flow.slice(0, 5); // Top 5 concept fund flows
-        const conceptTableBody = document.getElementById('concept-fund-flow').getElementsByTagName('tbody')[0];
-
-        conceptFlow.forEach(item => {
-            const row = conceptTableBody.insertRow();
-            row.insertCell(0).textContent = item.行业;
-            row.insertCell(1).textContent = item.流入资金;
-            row.insertCell(2).textContent = item.流出资金;
-            row.insertCell(3).textContent = item.净流入_流出;
-        });
-
-        // Populate the Industry Fund Flow table
-        const industryFlow = data.industry_fund_flow.slice(0, 5); // Top 5 industry fund flows
-        const industryTableBody = document.getElementById('industry-fund-flow').getElementsByTagName('tbody')[0];
-
-        industryFlow.forEach(item => {
-            const row = industryTableBody.insertRow();
-            row.insertCell(0).textContent = item.行业;
-            row.insertCell(1).textContent = item.流入资金;
-            row.insertCell(2).textContent = item.流出资金;
-            row.insertCell(3).textContent = item.净流入_流出;
-        });
-    })
-    .catch(error => {
-        console.error('Error loading market data:', error);
-    });
+});
