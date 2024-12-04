@@ -14,7 +14,7 @@ def get_market_data():
     start_date = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
 
     # 获取创业板指数据
-    indices_data['创业板指'] = ak.stock_zh_index_daily_tx(symbol="czse399006", ).tail(5)['close'].values
+    indices_data['创业板指'] = ak.stock_zh_index_daily_tx(symbol="czse399006" ).tail(5)['close'].values
 
     # 获取概念资金流数据
     concept_fund_flow = ak.stock_fund_flow_concept(symbol="即时")
