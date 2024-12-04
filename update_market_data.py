@@ -3,18 +3,17 @@ import json
 from datetime import datetime, timedelta
 
 def get_market_data():
-    # 获取三大指数近五日数据
-    indices_data = ak.stock_zh_index_daily_tx(symbol="sh000001")  # 上证指数
-    indices_data = indices_data[['date', 'close']].tail(5)
-    indices_data = indices_data.rename(columns={"close": "上证指数"})
-    indices_data['深证成指'] = ak.stock_zh_index_daily_tx(symbol="sz399001").tail(5)['close'].values
-    
-    # 显式设置日期范围
+    # 获取当前日期和五天前的日期
     end_date = datetime.now().strftime('%Y-%m-%d')
     start_date = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
 
-    # 获取创业板指数据
-    # indices_data['创业板指'] = ak.stock_zh_index_daily_tx(symbol="czse399006" ).tail(5)['close'].values
+    # 获取三大指数近五日数据
+    indices_data = ak.stock_zh_index_daily_tx(symbol="sh000001", start_date=start_date, end_date=end_date)[['date', 'close']]
+    indices_data = indices_data.rename(columns={"close": "上证指数"})
+    
+    # 传递start_date和end_date来确保数据的正确性
+    indices_data['深证成指'] = ak.stock_zh_index_daily_tx(symbol="sz399001", start_date=start_date, end_date=end_date)[['close']].values
+    indices_data['创业板指'] = ak.stock_zh_index_daily_tx(symbol="czse399006", start_date=start_date, end_date=end_date)[['close']].values
 
     # 获取概念资金流数据
     concept_fund_flow = ak.stock_fund_flow_concept(symbol="即时")
