@@ -1,99 +1,67 @@
-// 获取后端传来的市场数据
-async function fetchMarketData() {
-    try {
-        // 假设你的后端接口是 '/market_data.json'，通过 fetch 获取数据
-        const response = await fetch('/market_data.json');
-        const marketData = await response.json();
-        
-        if (marketData) {
-            renderIndicesChart(marketData.indices);
-            renderConceptFundFlow(marketData.concept_fund_flow);
-            renderIndustryFundFlow(marketData.industry_fund_flow);
-        }
-    } catch (error) {
-        console.error("Error fetching market data:", error);
-    }
+// 页面加载完成后运行
+window.onload = function() {
+    // 获取 JSON 数据并渲染到页面
+    fetch('/market_data.json')
+        .then(response => response.json())
+        .then(data => {
+            // 渲染三大指数卡片
+            renderIndices(data.indices);
+            // 渲染概念资金流卡片
+            renderConceptFundFlow(data.concept_fund_flow);
+            // 渲染行业资金流卡片
+            renderIndustryFundFlow(data.industry_fund_flow);
+        })
+        .catch(error => console.error("Error fetching market data:", error));
+};
+
+// 渲染三大指数卡片
+function renderIndices(indices) {
+    const container = document.getElementById("indices-cards");
+    container.innerHTML = ''; // 清空容器
+
+    indices.forEach(index => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <h3>${index.date}</h3>
+            <p>上证指数: ${index['上证指数']} 点</p>
+            <p>深证成指: ${index['深证成指']} 点</p>
+            <p>创业板指: ${index['创业板指']} 点</p>
+        `;
+        container.appendChild(card);
+    });
 }
 
-function renderIndicesChart(indicesData) {
-    const indicesChart = echarts.init(document.getElementById('indicesChart'));
-
-    const dates = indicesData.map(item => item.date);
-    const szIndexData = indicesData.map(item => item["上证指数"]);
-    const szciIndexData = indicesData.map(item => item["深证成指"]);
-    const cybIndexData = indicesData.map(item => item["创业板指"]);
-
-    const option = {
-        title: {
-            text: '三大指数近五日走势',
-            subtext: '数据来自 Akshare'
-        },
-        legend: {
-            data: ['上证指数', '深证成指', '创业板指']
-        },
-        tooltip: {},
-        xAxis: {
-            type: 'category',
-            data: dates
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name: '上证指数',
-                type: 'line',
-                data: szIndexData
-            },
-            {
-                name: '深证成指',
-                type: 'line',
-                data: szciIndexData
-            },
-            {
-                name: '创业板指',
-                type: 'line',
-                data: cybIndexData
-            }
-        ]
-    };
-    
-    indicesChart.setOption(option);
-}
-
+// 渲染概念资金流卡片
 function renderConceptFundFlow(conceptData) {
-    const conceptCardsContainer = document.getElementById('concept-cards');
-    conceptCardsContainer.innerHTML = '';
+    const container = document.getElementById("concept-cards");
+    container.innerHTML = ''; // 清空容器
 
-    conceptData.forEach(item => {
-        const card = document.createElement('div');
-        card.classList.add('card');
+    conceptData.forEach(concept => {
+        const card = document.createElement("div");
+        card.className = "card";
         card.innerHTML = `
-            <h3>${item.名称}</h3>
-            <p>流入资金: ${item["今日主力净流入-净额"]} 亿</p>
-            <p>流出资金: ${item["今日主力净流入-净额"]} 亿</p>
+            <h3>${concept['名称']}</h3>
+            <p>净流入资金: ${concept['今日主力净流入-净额']} 亿</p>
+            <p>最大流入股票: ${concept['今日主力净流入最大股']}</p>
         `;
-        conceptCardsContainer.appendChild(card);
+        container.appendChild(card);
     });
 }
 
+// 渲染行业资金流卡片
 function renderIndustryFundFlow(industryData) {
-    const industryCardsContainer = document.getElementById('industry-cards');
-    industryCardsContainer.innerHTML = '';
+    const container = document.getElementById("industry-cards");
+    container.innerHTML = ''; // 清空容器
 
-    industryData.forEach(item => {
-        const card = document.createElement('div');
-        card.classList.add('card');
+    industryData.forEach(industry => {
+        const card = document.createElement("div");
+        card.className = "card";
         card.innerHTML = `
-            <h3>${item.名称}</h3>
-            <p>流入资金: ${item["今日主力净流入-净额"]} 亿</p>
-            <p>流出资金: ${item["今日主力净流入-净额"]} 亿</p>
+            <h3>${industry['名称']}</h3>
+            <p>净流入资金: ${industry['今日主力净流入-净额']} 亿</p>
+            <p>最大流入股票: ${industry['今日主力净流入最大股']}</p>
         `;
-        industryCardsContainer.appendChild(card);
+        container.appendChild(card);
     });
 }
-
-// 页面加载时渲染图表和表格
-document.addEventListener('DOMContentLoaded', function() {
-    fetchMarketData();
-});
