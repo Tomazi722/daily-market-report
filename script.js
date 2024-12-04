@@ -1,59 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Market Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <!-- 三大指数的折线图 -->
-        <div class="chart-container">
-            <h2>三大指数近5日走势</h2>
-            <canvas id="szChart"></canvas>
-            <canvas id="szciChart"></canvas>
-            <canvas id="cybChart"></canvas>
-        </div>
+// Fetch the market data from the JSON file
+fetch('market_data.json')
+    .then(response => response.json())
+    .then(data => {
+        // Populate the 3 indices chart
+        const indices = data.indices.slice(0, 5); // Get last 5 days data
+        const indexLabels = indices.map(item => item.date);
+        const indexData = {
+            labels: indexLabels,
+            datasets: [
+                {
+                    label: '上证指数',
+                    data: indices.map(item => item.上证指数),
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: false
+                },
+                {
+                    label: '深证成指',
+                    data: indices.map(item => item.深证成指),
+                    borderColor: 'rgb(153, 102, 255)',
+                    fill: false
+                },
+                {
+                    label: '创业板指',
+                    data: indices.map(item => item.创业板指),
+                    borderColor: 'rgb(255, 159, 64)',
+                    fill: false
+                }
+            ]
+        };
 
-        <!-- 概念资金流 -->
-        <div class="fund-flow-container">
-            <h3>概念资金流</h3>
-            <table id="concept-fund-flow">
-                <thead>
-                    <tr>
-                        <th>行业</th>
-                        <th>流入资金 (亿)</th>
-                        <th>流出资金 (亿)</th>
-                        <th>净流入/流出 (亿)</th>
-                    </tr>
-                </thead>
-                <tbody id="concept-tbody">
-                    <!-- 动态加载数据 -->
-                </tbody>
-            </table>
-        </div>
+        const ctx = document.getElementById('indexChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: indexData,
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: '日期'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '指数值'
+                        }
+                    }
+                }
+            }
+        });
 
-        <!-- 行业资金流 -->
-        <div class="fund-flow-container">
-            <h3>行业资金流</h3>
-            <table id="industry-fund-flow">
-                <thead>
-                    <tr>
-                        <th>行业</th>
-                        <th>流入资金 (亿)</th>
-                        <th>流出资金 (亿)</th>
-                        <th>净流入/流出 (亿)</th>
-                    </tr>
-                </thead>
-                <tbody id="industry-tbody">
-                    <!-- 动态加载数据 -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+        // Populate the Concept Fund Flow table
+        const conceptFlow = data.concept_fund_flow.slice(0, 5); // Top 5 concept fund flows
+        const conceptTableBody = document.getElementById('concept-fund-flow').getElementsByTagName('tbody')[0];
 
-    <script src="script.js"></script>
-</body>
-</html>
+        conceptFlow.forEach(item => {
+            const row = conceptTableBody.insertRow();
+            row.insertCell(0).textContent = item.行业;
+            row.insertCell(1).textContent = item.流入资金;
+            row.insertCell(2).textContent = item.流出资金;
+            row.insertCell(3).textContent = item.净流入_流出;
+        });
+
+        // Populate the Industry Fund Flow table
+        const industryFlow = data.industry_fund_flow.slice(0, 5); // Top 5 industry fund flows
+        const industryTableBody = document.getElementById('industry-fund-flow').getElementsByTagName('tbody')[0];
+
+        industryFlow.forEach(item => {
+            const row = industryTableBody.insertRow();
+            row.insertCell(0).textContent = item.行业;
+            row.insertCell(1).textContent = item.流入资金;
+            row.insertCell(2).textContent = item.流出资金;
+            row.insertCell(3).textContent = item.净流入_流出;
+        });
+    })
+    .catch(error => {
+        console.error('Error loading market data:', error);
+    });
