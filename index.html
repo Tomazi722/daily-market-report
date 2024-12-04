@@ -1,39 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Market Data Dashboard</title>
-    <link rel="stylesheet" href="/static/styles.css"> <!-- 引入样式 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 用于生成图表 -->
+    <title>市场数据</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Market Data Dashboard</h1>
-
-    <!-- 三大指数卡片和图表 -->
-    <div id="indices">
-        <h2>三大指数</h2>
-        <div id="indices-cards">
-            <!-- 会通过 JavaScript 动态填充 -->
+    <div id="indices" class="card-container">
+        <h2>三大指数数据</h2>
+        <div class="card" id="sz-index-card">
+            <h3>上证指数</h3>
+            <div id="sz-index-chart"></div>
+        </div>
+        <div class="card" id="szci-index-card">
+            <h3>深证成指</h3>
+            <div id="szci-index-chart"></div>
+        </div>
+        <div class="card" id="cyb-index-card">
+            <h3>创业板指</h3>
+            <div id="cyb-index-chart"></div>
         </div>
     </div>
 
-    <!-- 行业资金流卡片和图表 -->
-    <div id="industry-fund-flow">
-        <h2>行业资金流</h2>
-        <div id="industry-fund-flow-cards">
-            <!-- 会通过 JavaScript 动态填充 -->
-        </div>
+    <div id="fund-flow" class="card-container">
+        <h2>资金流向</h2>
+        <h3>行业资金流</h3>
+        <table id="industry-fund-flow">
+            <thead>
+                <tr>
+                    <th>行业</th>
+                    <th>净流入金额</th>
+                    <th>主力最大股</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h3>概念资金流</h3>
+        <table id="concept-fund-flow">
+            <thead>
+                <tr>
+                    <th>概念</th>
+                    <th>净流入金额</th>
+                    <th>主力最大股</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
-    <!-- 概念资金流卡片和图表 -->
-    <div id="concept-fund-flow">
-        <h2>概念资金流</h2>
-        <div id="concept-fund-flow-cards">
-            <!-- 会通过 JavaScript 动态填充 -->
-        </div>
-    </div>
-
-    <script src="/static/script.js"></script> <!-- 引入 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
