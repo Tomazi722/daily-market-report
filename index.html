@@ -1,61 +1,74 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Data Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Market Data Dashboard</h1>
+    <h1>Market Data Dashboard</h1>
 
-        <!-- Three Indexes Section -->
-        <div class="indices">
-            <div class="card" id="index-card">
-                <h3>三大指数 - 近5日数据</h3>
-                <canvas id="indexChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Concept Fund Flow Section -->
-        <div class="concept-fund-flow">
-            <h3>概念资金流</h3>
-            <table id="concept-fund-flow">
-                <thead>
-                    <tr>
-                        <th>行业</th>
-                        <th>流入资金(亿元)</th>
-                        <th>流出资金(亿元)</th>
-                        <th>净流入/流出(亿元)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be populated by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Industry Fund Flow Section -->
-        <div class="industry-fund-flow">
-            <h3>行业资金流</h3>
-            <table id="industry-fund-flow">
-                <thead>
-                    <tr>
-                        <th>行业</th>
-                        <th>流入资金(亿元)</th>
-                        <th>流出资金(亿元)</th>
-                        <th>净流入/流出(亿元)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be populated by JavaScript -->
-                </tbody>
-            </table>
+    <!-- 三大指数卡片和图表 -->
+    <div id="indices">
+        <h2>三大指数</h2>
+        <div id="indices-cards">
+            <!-- 会通过 JavaScript 动态填充 -->
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+    <!-- 行业资金流卡片和图表 -->
+    <div id="industry-fund-flow">
+        <h2>行业资金流</h2>
+        <div id="industry-fund-flow-cards">
+            <!-- 会通过 JavaScript 动态填充 -->
+        </div>
+    </div>
+
+    <!-- 概念资金流卡片和图表 -->
+    <div id="concept-fund-flow">
+        <h2>概念资金流</h2>
+        <div id="concept-fund-flow-cards">
+            <!-- 会通过 JavaScript 动态填充 -->
+        </div>
+    </div>
+
+    <script>
+        // Fetch market data from the JSON endpoint
+        fetch('/market_data')
+            .then(response => response.json())
+            .then(data => {
+                // 显示三大指数
+                const indicesData = data.indices;
+                indicesData.forEach(index => {
+                    const card = document.createElement('div');
+                    card.innerHTML = `<h3>${index.date}</h3>
+                                    <p>上证指数: ${index.上证指数}</p>
+                                    <p>深证成指: ${index.深证成指}</p>
+                                    <p>创业板指: ${index.创业板指}</p>`;
+                    document.getElementById('indices-cards').appendChild(card);
+                });
+
+                // 显示行业资金流
+                const industryData = data.industry_fund_flow;
+                industryData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.innerHTML = `<h3>${item.名称}</h3>
+                                    <p>净流入金额: ${item['今日主力净流入-净额']}</p>
+                                    <p>最大流入股: ${item['今日主力净流入最大股']}</p>`;
+                    document.getElementById('industry-fund-flow-cards').appendChild(card);
+                });
+
+                // 显示概念资金流
+                const conceptData = data.concept_fund_flow;
+                conceptData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.innerHTML = `<h3>${item.名称}</h3>
+                                    <p>净流入金额: ${item['今日主力净流入-净额']}</p>
+                                    <p>最大流入股: ${item['今日主力净流入最大股']}</p>`;
+                    document.getElementById('concept-fund-flow-cards').appendChild(card);
+                });
+            });
+    </script>
 </body>
 </html>
