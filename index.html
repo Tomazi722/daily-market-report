@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>股市资金流向</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
 <body>
-
     <nav class="navbar">
         <div class="logo">
             <img src="https://www.example.com/logo.png" alt="Logo" class="logo-img">
@@ -28,7 +19,7 @@
 
     <section id="indices" class="indices-section">
         <h2>三大指数走势</h2>
-        <canvas id="indicesChart" width="1003" height="501"></canvas>
+        <div id="indices-cards" class="fund-flow-cards"></div>
     </section>
 
     <section id="concept-fund-flow" class="fund-flow-section">
@@ -41,8 +32,5 @@
         <div id="industry-cards" class="fund-flow-cards"></div>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
     <script src="script.js"></script>
-
 </body>
-</html>
