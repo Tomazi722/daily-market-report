@@ -1,6 +1,6 @@
 import akshare as ak
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def get_market_data():
     # 获取三大指数近五日数据
