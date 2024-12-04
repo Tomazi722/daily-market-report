@@ -7,7 +7,8 @@ async function fetchMarketData() {
         
         if (marketData) {
             renderIndicesChart(marketData.indices);
-            renderFundFlowTable(marketData.industry_fund_flow, marketData.concept_fund_flow);
+            renderConceptFundFlow(marketData.concept_fund_flow);
+            renderIndustryFundFlow(marketData.industry_fund_flow);
         }
     } catch (error) {
         console.error("Error fetching market data:", error);
@@ -15,60 +16,80 @@ async function fetchMarketData() {
 }
 
 function renderIndicesChart(indicesData) {
-    // 上证指数图
-    let szIndexChart = echarts.init(document.getElementById('sz-index-chart'));
-    szIndexChart.setOption({
-        title: { text: '上证指数近5日', subtext: '数据来自 Akshare' },
-        xAxis: { type: 'category', data: indicesData.map(item => item.date) },
-        yAxis: { type: 'value' },
-        series: [{
-            data: indicesData.map(item => item["上证指数"]),
-            type: 'line'
-        }]
-    });
+    const indicesChart = echarts.init(document.getElementById('indicesChart'));
 
-    // 深证成指图
-    let szciIndexChart = echarts.init(document.getElementById('szci-index-chart'));
-    szciIndexChart.setOption({
-        title: { text: '深证成指近5日', subtext: '数据来自 Akshare' },
-        xAxis: { type: 'category', data: indicesData.map(item => item.date) },
-        yAxis: { type: 'value' },
-        series: [{
-            data: indicesData.map(item => item["深证成指"]),
-            type: 'line'
-        }]
-    });
+    const dates = indicesData.map(item => item.date);
+    const szIndexData = indicesData.map(item => item["上证指数"]);
+    const szciIndexData = indicesData.map(item => item["深证成指"]);
+    const cybIndexData = indicesData.map(item => item["创业板指"]);
 
-    // 创业板指图
-    let cybIndexChart = echarts.init(document.getElementById('cyb-index-chart'));
-    cybIndexChart.setOption({
-        title: { text: '创业板指近5日', subtext: '数据来自 Akshare' },
-        xAxis: { type: 'category', data: indicesData.map(item => item.date) },
-        yAxis: { type: 'value' },
-        series: [{
-            data: indicesData.map(item => item["创业板指"]),
-            type: 'line'
-        }]
+    const option = {
+        title: {
+            text: '三大指数近五日走势',
+            subtext: '数据来自 Akshare'
+        },
+        legend: {
+            data: ['上证指数', '深证成指', '创业板指']
+        },
+        tooltip: {},
+        xAxis: {
+            type: 'category',
+            data: dates
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '上证指数',
+                type: 'line',
+                data: szIndexData
+            },
+            {
+                name: '深证成指',
+                type: 'line',
+                data: szciIndexData
+            },
+            {
+                name: '创业板指',
+                type: 'line',
+                data: cybIndexData
+            }
+        ]
+    };
+    
+    indicesChart.setOption(option);
+}
+
+function renderConceptFundFlow(conceptData) {
+    const conceptCardsContainer = document.getElementById('concept-cards');
+    conceptCardsContainer.innerHTML = '';
+
+    conceptData.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+            <h3>${item.名称}</h3>
+            <p>流入资金: ${item["今日主力净流入-净额"]} 亿</p>
+            <p>流出资金: ${item["今日主力净流入-净额"]} 亿</p>
+        `;
+        conceptCardsContainer.appendChild(card);
     });
 }
 
-function renderFundFlowTable(industryFundFlow, conceptFundFlow) {
-    // 渲染行业资金流
-    let industryTable = document.getElementById('industry-fund-flow').getElementsByTagName('tbody')[0];
-    industryFundFlow.forEach(item => {
-        let row = industryTable.insertRow();
-        row.insertCell(0).textContent = item.名称;
-        row.insertCell(1).textContent = item["今日主力净流入-净额"].toLocaleString();
-        row.insertCell(2).textContent = item["今日主力净流入最大股"];
-    });
+function renderIndustryFundFlow(industryData) {
+    const industryCardsContainer = document.getElementById('industry-cards');
+    industryCardsContainer.innerHTML = '';
 
-    // 渲染概念资金流
-    let conceptTable = document.getElementById('concept-fund-flow').getElementsByTagName('tbody')[0];
-    conceptFundFlow.forEach(item => {
-        let row = conceptTable.insertRow();
-        row.insertCell(0).textContent = item.名称;
-        row.insertCell(1).textContent = item["今日主力净流入-净额"].toLocaleString();
-        row.insertCell(2).textContent = item["今日主力净流入最大股"];
+    industryData.forEach(item => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+            <h3>${item.名称}</h3>
+            <p>流入资金: ${item["今日主力净流入-净额"]} 亿</p>
+            <p>流出资金: ${item["今日主力净流入-净额"]} 亿</p>
+        `;
+        industryCardsContainer.appendChild(card);
     });
 }
 
