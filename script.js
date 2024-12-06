@@ -1,74 +1,67 @@
-window.onload = function () {
+// 页面加载完成后运行
+window.onload = function() {
+    // 获取 JSON 数据并渲染到页面
     fetch('market_data.json')
         .then(response => response.json())
         .then(data => {
-            console.log('Market data loaded:', data);  // 检查数据
-            const indicesData = data.indices;
-
-            const dates = indicesData.map(item => item.date);
-            const shIndex = indicesData.map(item => item['上证指数']);
-            const szIndex = indicesData.map(item => item['深证成指']);
-            const cybIndex = indicesData.map(item => item['创业板指']);
-
-            createBarChart('shChart', '上证指数', dates, shIndex, '#3498db');
-            createBarChart('szChart', '深证成指', dates, szIndex, '#e74c3c');
-            createBarChart('cybChart', '创业板指', dates, cybIndex, '#2ecc71');
+            // 渲染三大指数卡片
+            renderIndices(data.indices);
+            // 渲染概念资金流卡片
+            renderConceptFundFlow(data.concept_fund_flow);
+            // 渲染行业资金流卡片
+            renderIndustryFundFlow(data.industry_fund_flow);
         })
-        .catch(error => {
-            console.error('Error loading market_data.json:', error);
-        });
+        .catch(error => console.error("Error fetching market data:", error));
 };
 
-function createBarChart(canvasId, label, labels, data, color) {
-    const ctx = document.getElementById(canvasId);
+// 渲染三大指数卡片
+function renderIndices(indices) {
+    const container = document.getElementById("indices-cards");
+    container.innerHTML = ''; // 清空容器
 
-    if (!ctx) {
-        console.error(`Canvas element with id ${canvasId} not found!`);
-        return;
-    }
+    indices.forEach(index => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <h3>${index.date}</h3>
+            <p>上证指数: <strong>${index['上证指数']}</strong> 点</p>
+            <p>深证成指: <strong>${index['深证成指']}</strong> 点</p>
+            <p>创业板指: <strong>${index['创业板指']}</strong> 点</p>
+        `;
+        container.appendChild(card);
+    });
+}
 
-    // 设置纵轴的最小和最大值
-    const minY = Math.min(...data) * 0.95;  // 设置为数据最小值的 95%
-    const maxY = Math.max(...data) * 1.05;  // 设置为数据最大值的 105%
+// 渲染概念资金流卡片
+function renderConceptFundFlow(conceptData) {
+    const container = document.getElementById("concept-cards");
+    container.innerHTML = ''; // 清空容器
 
-    console.log(`Creating chart for ${label}, MinY: ${minY}, MaxY: ${maxY}`);  // 调试信息
+    conceptData.forEach(concept => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <h3>${concept['名称']}</h3>
+            <p>净流入资金: <strong>${(concept['今日主力净流入-净额'] / 1e8).toFixed(2)} 亿</strong></p>
+            <p>最大流入股票: <strong>${concept['今日主力净流入最大股']}</strong></p>
+        `;
+        container.appendChild(card);
+    });
+}
 
-    // 创建柱状图
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: label,
-                data: data,
-                backgroundColor: color,
-                borderColor: color,
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: false,  // 禁用自动适应
-            maintainAspectRatio: false,  // 禁用纵横比维持
-            scales: {
-                x: {
-                    type: 'category',
-                    ticks: {
-                        autoSkip: false
-                    }
-                },
-                y: {
-                    beginAtZero: false,
-                    min: minY,  // 设置纵轴最小值
-                    max: maxY,  // 设置纵轴最大值
-                    ticks: {
-                        callback: function(value) {
-                            return value.toFixed(0);
-                        }
-                    }
-                }
-            },
-            height: 300,  // 固定高度
-            width: 400    // 固定宽度
-        }
+// 渲染行业资金流卡片
+function renderIndustryFundFlow(industryData) {
+    const container = document.getElementById("industry-cards");
+    container.innerHTML = ''; // 清空容器
+
+    industryData.forEach(industry => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <h3>${industry['名称']}</h3>
+            <p>净流入资金: <strong>${(industry['今日主力净流入-净额'] / 1e8).toFixed(2)} 亿</strong></p>
+            <p>最大流入股票: <strong>${industry['今日主力净流入最大股']}</strong></p>
+        `;
+        container.appendChild(card);
     });
 }
