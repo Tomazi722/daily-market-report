@@ -1,7 +1,7 @@
 // 页面加载完成后运行
 window.onload = function() {
     // 获取 JSON 数据并渲染到页面
-    fetch('/market_data.json')
+    fetch('market_data.json')
         .then(response => response.json())
         .then(data => {
             // 渲染三大指数卡片
@@ -24,9 +24,9 @@ function renderIndices(indices) {
         card.className = "card";
         card.innerHTML = `
             <h3>${index.date}</h3>
-            <p>上证指数: ${index['上证指数']} 点</p>
-            <p>深证成指: ${index['深证成指']} 点</p>
-            <p>创业板指: ${index['创业板指']} 点</p>
+            <p>上证指数: <strong>${index['上证指数']}</strong> 点</p>
+            <p>深证成指: <strong>${index['深证成指']}</strong> 点</p>
+            <p>创业板指: <strong>${index['创业板指']}</strong> 点</p>
         `;
         container.appendChild(card);
     });
@@ -42,8 +42,8 @@ function renderConceptFundFlow(conceptData) {
         card.className = "card";
         card.innerHTML = `
             <h3>${concept['名称']}</h3>
-            <p>净流入资金: ${concept['今日主力净流入-净额']} 亿</p>
-            <p>最大流入股票: ${concept['今日主力净流入最大股']}</p>
+            <p>净流入资金: <strong>${(concept['今日主力净流入-净额'] / 1e8).toFixed(2)} 亿</strong></p>
+            <p>最大流入股票: <strong>${concept['今日主力净流入最大股']}</strong></p>
         `;
         container.appendChild(card);
     });
@@ -59,8 +59,8 @@ function renderIndustryFundFlow(industryData) {
         card.className = "card";
         card.innerHTML = `
             <h3>${industry['名称']}</h3>
-            <p>净流入资金: ${industry['今日主力净流入-净额']} 亿</p>
-            <p>最大流入股票: ${industry['今日主力净流入最大股']}</p>
+            <p>净流入资金: <strong>${(industry['今日主力净流入-净额'] / 1e8).toFixed(2)} 亿</strong></p>
+            <p>最大流入股票: <strong>${industry['今日主力净流入最大股']}</strong></p>
         `;
         container.appendChild(card);
     });
