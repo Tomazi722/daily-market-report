@@ -23,6 +23,12 @@ window.onload = function () {
 // 创建折线图的通用函数
 function createChart(canvasId, label, labels, data, color) {
     const ctx = document.getElementById(canvasId);
+
+    // 计算数据中的最小值和最大值
+    const minData = Math.min(...data);
+    const maxData = Math.max(...data);
+    const padding = (maxData - minData) * 0.05; // 增加5%的边距
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -38,7 +44,7 @@ function createChart(canvasId, label, labels, data, color) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true, // 保持宽高比例
             scales: {
                 x: {
                     type: 'category',
@@ -47,7 +53,15 @@ function createChart(canvasId, label, labels, data, color) {
                     }
                 },
                 y: {
-                    beginAtZero: false
+                    beginAtZero: false,
+                    min: minData - padding, // 设置纵轴最小值
+                    max: maxData + padding, // 设置纵轴最大值
+                    stepSize: (maxData - minData) / 5, // 设置纵轴步长
+                    ticks: {
+                        callback: function(value) {
+                            return value.toFixed(0); // 保留整数
+                        }
+                    }
                 }
             }
         }
