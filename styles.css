@@ -1,57 +1,71 @@
-window.onload = function () {
-    // 动态加载 market_data.json 文件的数据
-    fetch('market_data.json')
-        .then(response => response.json())
-        .then(data => {
-            // 从 market_data.json 中提取三大指数数据
-            const indicesData = data.indices;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
 
-            // 提取日期和三大指数数据
-            const dates = indicesData.map(item => item.date);
-            const shIndex = indicesData.map(item => item['上证指数']);
-            const szIndex = indicesData.map(item => item['深证成指']);
-            const cybIndex = indicesData.map(item => item['创业板指']);
+.navbar {
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
 
-            // 创建三个折线图
-            createChart('shChart', '上证指数', dates, shIndex, '#3498db');
-            createChart('szChart', '深证成指', dates, szIndex, '#e74c3c');
-            createChart('cybChart', '创业板指', dates, cybIndex, '#2ecc71');
-        })
-        .catch(error => console.error('Error loading market_data.json:', error));
-};
+.navbar .logo img {
+    width: 50px;
+    height: 50px;
+}
 
-// 创建折线图的通用函数
-function createChart(canvasId, label, labels, data, color) {
-    const ctx = document.getElementById(canvasId);
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: label,
-                data: data,
-                borderColor: color,
-                backgroundColor: `${color}33`, // 半透明的背景颜色
-                borderWidth: 2,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true, // 保持宽高比例
-            scales: {
-                x: {
-                    type: 'category',
-                    ticks: {
-                        autoSkip: false
-                    }
-                },
-                y: {
-                    beginAtZero: false,
-                    suggestedMin: Math.min(...data) * 0.95, // 保留较小的安全边界
-                    suggestedMax: Math.max(...data) * 1.05 // 保留较大的安全边界
-                }
-            }
-        }
-    });
+.navbar .menu a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+.navbar .menu a:hover {
+    text-decoration: underline;
+}
+
+.header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.header-content h1 {
+    font-size: 2.5em;
+}
+
+.fund-flow-section {
+    padding: 20px;
+    text-align: center;
+}
+
+.fund-flow-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 1em;
+    margin: 5px 0;
 }
