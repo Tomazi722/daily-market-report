@@ -27,8 +27,9 @@ function createBarChart(canvasId, label, labels, data, color) {
         return;
     }
 
-    const minY = Math.min(...data) * 0.95;
-    const maxY = Math.max(...data) * 1.05;
+    // 设置纵轴的最小和最大值
+    const minY = Math.min(...data) * 0.95;  // 设置为数据最小值的 95%
+    const maxY = Math.max(...data) * 1.05;  // 设置为数据最大值的 105%
 
     console.log(`Creating chart for ${label}, MinY: ${minY}, MaxY: ${maxY}`);  // 调试信息
 
@@ -46,8 +47,8 @@ function createBarChart(canvasId, label, labels, data, color) {
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: false,  // 禁用自动适应
+            maintainAspectRatio: false,  // 禁用纵横比维持
             scales: {
                 x: {
                     type: 'category',
@@ -57,15 +58,17 @@ function createBarChart(canvasId, label, labels, data, color) {
                 },
                 y: {
                     beginAtZero: false,
-                    min: minY,
-                    max: maxY,
+                    min: minY,  // 设置纵轴最小值
+                    max: maxY,  // 设置纵轴最大值
                     ticks: {
                         callback: function(value) {
                             return value.toFixed(0);
                         }
                     }
                 }
-            }
+            },
+            height: 300,  // 固定高度
+            width: 400    // 固定宽度
         }
     });
 }
