@@ -2,6 +2,7 @@ window.onload = function () {
     fetch('market_data.json')
         .then(response => response.json())
         .then(data => {
+            console.log('Market data loaded:', data);  // 检查数据
             const indicesData = data.indices;
 
             const dates = indicesData.map(item => item.date);
@@ -13,14 +14,23 @@ window.onload = function () {
             createBarChart('szChart', '深证成指', dates, szIndex, '#e74c3c');
             createBarChart('cybChart', '创业板指', dates, cybIndex, '#2ecc71');
         })
-        .catch(error => console.error('Error loading market_data.json:', error));
+        .catch(error => {
+            console.error('Error loading market_data.json:', error);
+        });
 };
 
 function createBarChart(canvasId, label, labels, data, color) {
     const ctx = document.getElementById(canvasId);
 
+    if (!ctx) {
+        console.error(`Canvas element with id ${canvasId} not found!`);
+        return;
+    }
+
     const minY = Math.min(...data) * 0.95;
     const maxY = Math.max(...data) * 1.05;
+
+    console.log(`Creating chart for ${label}, MinY: ${minY}, MaxY: ${maxY}`);  // 调试信息
 
     // 创建柱状图
     new Chart(ctx, {
