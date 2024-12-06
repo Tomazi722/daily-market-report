@@ -27,7 +27,14 @@ function createChart(canvasId, label, labels, data, color) {
     // 计算数据中的最小值和最大值
     const minData = Math.min(...data);
     const maxData = Math.max(...data);
-    const padding = (maxData - minData) * 0.05; // 增加5%的边距
+
+    // 根据数据范围自动计算纵轴范围，保留一定边距
+    const padding = (maxData - minData) * 0.05;  // 增加5%的边距
+    const minY = Math.floor(minData - padding);   // 向下取整，确保不露出数据
+    const maxY = Math.ceil(maxData + padding);    // 向上取整，确保有足够空白
+
+    // 设置合适的步长
+    const stepSize = Math.ceil((maxY - minY) / 5); // 根据总范围设置纵轴步长
 
     new Chart(ctx, {
         type: 'line',
@@ -44,7 +51,7 @@ function createChart(canvasId, label, labels, data, color) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true, // 保持宽高比例
+            maintainAspectRatio: false, // 不保持宽高比例
             scales: {
                 x: {
                     type: 'category',
@@ -54,9 +61,9 @@ function createChart(canvasId, label, labels, data, color) {
                 },
                 y: {
                     beginAtZero: false,
-                    min: minData - padding, // 设置纵轴最小值
-                    max: maxData + padding, // 设置纵轴最大值
-                    stepSize: (maxData - minData) / 5, // 设置纵轴步长
+                    min: minY, // 设置纵轴最小值
+                    max: maxY, // 设置纵轴最大值
+                    stepSize: stepSize, // 设置纵轴步长
                     ticks: {
                         callback: function(value) {
                             return value.toFixed(0); // 保留整数
