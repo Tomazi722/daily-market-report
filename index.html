@@ -3,37 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>市场数据展示</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Market Data</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <h1>市场数据展示</h1>
-
     <div class="container">
-        <div class="card">
+        <h1>股市数据展示</h1>
+        
+        <!-- 显示股指数据 -->
+        <div id="indicesData" class="card-container">
             <h2>股指数据</h2>
-            <div id="indicesData" class="card-content">
-                <!-- 数据会通过JavaScript填充 -->
-            </div>
         </div>
 
-        <div class="card">
+        <!-- 显示行业资金流入数据 -->
+        <div id="industryFundFlowData" class="card-container">
             <h2>行业资金流入</h2>
-            <div id="industryFundFlowData" class="card-content">
-                <!-- 数据会通过JavaScript填充 -->
-            </div>
         </div>
 
-        <div class="card">
+        <!-- 显示概念资金流入数据 -->
+        <div id="conceptFundFlowData" class="card-container">
             <h2>概念资金流入</h2>
-            <div id="conceptFundFlowData" class="card-content">
-                <!-- 数据会通过JavaScript填充 -->
-            </div>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-
