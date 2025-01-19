@@ -3,43 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>股市资金流向</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>市场数据展示</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img src="https://www.example.com/logo.png" alt="Logo" class="logo-img">
-        </div>
-        <div class="menu">
-            <a href="#">首页</a>
-            <a href="#">概念资金流</a>
-            <a href="#">行业资金流</a>
-        </div>
-    </nav>
 
-    <header class="header">
-        <div class="header-content">
-            <h1>股市资金流向</h1>
-            <p>查看三大指数走势及概念与行业资金流向，实时掌握市场动态。</p>
-        </div>
-    </header>
+    <h1>市场数据展示</h1>
 
-    <section id="indices" class="indices-section">
-        <h2>三大指数走势</h2>
-        <canvas id="indicesChart" width="1003" height="501" style="display: block; box-sizing: border-box; height: 334px; width: 668px;"></canvas>
-    </section>
+    <div class="section">
+        <h2>股指数据</h2>
+        <table id="indicesTable">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>上证指数</th>
+                    <th>深证成指</th>
+                    <th>创业板指</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 数据会通过JavaScript填充 -->
+            </tbody>
+        </table>
+    </div>
 
-    <section id="concept-fund-flow" class="fund-flow-section">
-        <h2>概念资金流向</h2>
-        <div id="concept-cards" class="fund-flow-cards"></div>
-    </section>
+    <div class="section">
+        <h2>行业资金流入</h2>
+        <table id="industryFundFlowTable">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>今日主力净流入-净额 (元)</th>
+                    <th>今日主力净流入最大股</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 数据会通过JavaScript填充 -->
+            </tbody>
+        </table>
+    </div>
 
-    <section id="industry-fund-flow" class="fund-flow-section">
-        <h2>行业资金流向</h2>
-        <div id="industry-cards" class="fund-flow-cards"></div>
-    </section>
+    <div class="section">
+        <h2>概念资金流入</h2>
+        <table id="conceptFundFlowTable">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>今日主力净流入-净额 (元)</th>
+                    <th>今日主力净流入最大股</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 数据会通过JavaScript填充 -->
+            </tbody>
+        </table>
+    </div>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
