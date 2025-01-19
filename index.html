@@ -10,53 +10,27 @@
 
     <h1>市场数据展示</h1>
 
-    <div class="section">
-        <h2>股指数据</h2>
-        <table id="indicesTable">
-            <thead>
-                <tr>
-                    <th>日期</th>
-                    <th>上证指数</th>
-                    <th>深证成指</th>
-                    <th>创业板指</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="container">
+        <div class="card">
+            <h2>股指数据</h2>
+            <div id="indicesData" class="card-content">
                 <!-- 数据会通过JavaScript填充 -->
-            </tbody>
-        </table>
-    </div>
+            </div>
+        </div>
 
-    <div class="section">
-        <h2>行业资金流入</h2>
-        <table id="industryFundFlowTable">
-            <thead>
-                <tr>
-                    <th>名称</th>
-                    <th>今日主力净流入-净额 (元)</th>
-                    <th>今日主力净流入最大股</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="card">
+            <h2>行业资金流入</h2>
+            <div id="industryFundFlowData" class="card-content">
                 <!-- 数据会通过JavaScript填充 -->
-            </tbody>
-        </table>
-    </div>
+            </div>
+        </div>
 
-    <div class="section">
-        <h2>概念资金流入</h2>
-        <table id="conceptFundFlowTable">
-            <thead>
-                <tr>
-                    <th>名称</th>
-                    <th>今日主力净流入-净额 (元)</th>
-                    <th>今日主力净流入最大股</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="card">
+            <h2>概念资金流入</h2>
+            <div id="conceptFundFlowData" class="card-content">
                 <!-- 数据会通过JavaScript填充 -->
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
