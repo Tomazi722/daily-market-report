@@ -1,20 +1,23 @@
-from flask import Flask, jsonify
+from flask import Flask, render_template, jsonify
 import json
 
 app = Flask(__name__)
 
+# 加载市场数据
+def load_market_data():
+    with open('market_data.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
+
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    # 渲染index.html
+    return render_template('index.html')
 
-@app.route('/market_data')
+@app.route('/api/market-data')
 def market_data():
-    try:
-        with open('market_data.json', 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        return jsonify(data)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    # 提供市场数据的API
+    data = load_market_data()
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)
